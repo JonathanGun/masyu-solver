@@ -1,6 +1,7 @@
 import time
 import argparse
 from copy import deepcopy
+from image_extract import parse_board, parse_grid, display_rects
 
 all_dir         = {0, 1, 2, 3, 4, 5, 6}
 left_dir        = {2, 3, 5}
@@ -14,23 +15,15 @@ vertical_dir    = {6}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--image", "-i", help="set image path, can be in txt (0 for black, 1 for white, - for empty) or jpg/jpeg/png")
+parser.add_argument("--size", "-s", help="set board size (only for image), in tuple i.e.'r, c', without quote")
 args = parser.parse_args()
 
 
 class Board:
-    def __init__(self, filename=""):
+    def __init__(self, config=[]):
         self.grid = []
-        if filename:
-            # input from file
-            with open(filename, "r") as f:
-                for line in f:
-                    self.grid.append(line.strip())
-        else:
-            # input from stdin
-            tmp = input()
-            while tmp != '$':
-                self.grid.append(tmp)
-                tmp = input()
+        for line in config:
+            self.grid.append(line.strip())
         self.r = len(self.grid)
         self.c = len(self.grid[0])
         self.init_pearl()
@@ -367,16 +360,56 @@ class Board:
         for line in self.grid:
             print(line)
 
+    def output_solution(self, path):
+        rects = []
+        for r in range(self.r):
+            for c in range(self.c):
+                if len(self.solution[r][c]) == 1:
+                    if self.solution[r][c] == 1:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
+                    elif self.solution[r][c] == 2:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
+                    elif self.solution[r][c] == 2:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
+                    elif self.solution[r][c] == 3:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
+                    elif self.solution[r][c] == 4:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
+                    elif self.solution[r][c] == 5:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
+                    elif self.solution[r][c] == 6:
+                        rects.append(((r - 2 * 45, c * 45), (r * 45 + 2, (c + 1) * 45)))
 
-if __name__ == "__main__":
+        display_rects(parse_grid(path, self.r, self.c), rects)
+
+
+def get_config():
     if args.image:
         filename = args.image
+        if filename.split(".")[-1] != "txt":
+            if not args.size:
+                print("Please refer the size of the board!")
+                quit()
+            args.size = list(map(int, args.size.split(",")))
+            config = parse_board(filename, args.size[0], args.size[1])
+        else:
+            with open(filename, "r") as f:
+                config = f.readlines()
     else:
         filename = input("Type input file name: ")
+        with open(filename, "r") as f:
+            config = f.readlines()
+    return config
+
+
+def main():
+    config = get_config()
     t0 = time.time()
-    B = Board(filename)
+    B = Board(config)
     if B.solvable():
         B.solve()
+        # B.output_solution(filename)
+
         if B.is_solved():
             print("Here is the solution:")
             B.print_board()
@@ -388,3 +421,7 @@ if __name__ == "__main__":
 
     t1 = time.time()
     print("Finished! Time taken:", t1 - t0, "seconds")
+
+
+if __name__ == "__main__":
+    main()
