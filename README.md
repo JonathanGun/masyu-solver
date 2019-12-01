@@ -17,7 +17,7 @@ python masyu.py -i <input-file>
 <input-file> currently can only be txt
 
 ## To-Do
-- input from file
+- input from image file (jpg/jpeg/png)
 - input from stdin
 - finish recursive backtracking algorithm after global restriction on board
 
