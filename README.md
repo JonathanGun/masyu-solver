@@ -15,8 +15,16 @@ or
 python masyu.py -i <input-file> -s <board-size>
 ```
 
-<input-file> currently can only be txt
-<board-size> please refer this when the input file is image type
+image example:
+
+input1.png
+
+<img src="input1.png">
+
+input2.png
+
+<img src="input2.png">
+
 
 ## To-Do
 - no need to refer size of board
